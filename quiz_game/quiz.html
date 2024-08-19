@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1f1c2c, #928dab);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+        .quiz-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        .quiz-header h2 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+        .quiz-question {
+            margin: 30px 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .quiz-options {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+        }
+        .quiz-options li {
+            margin: 15px 0;
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .quiz-options li:hover {
+            background: #555;
+        }
+        .quiz-options input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.3);
+        }
+        .quiz-footer {
+            margin-top: 20px;
+        }
+        .quiz-footer button {
+            padding: 12px 30px;
+            background: #ff4b2b;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+        .quiz-footer button:hover {
+            background: #ff6a3b;
+        }
+        .result-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .result-container h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        .result-container button {
+            padding: 10px 25px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .result-container button:hover {
+            background: #444;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <h2>Interactive Quiz Game</h2>
+        </div>
+        <div id="quiz-content">
+            <div class="quiz-question">
+                <h3 id="question">Question text will appear here</h3>
+            </div>
+            <ul class="quiz-options" id="options">
+                <!-- Options will be inserted here dynamically -->
+            </ul>
+        </div>
+        <div class="quiz-footer">
+            <button onclick="submitAnswer()">Submit</button>
+        </div>
+    </div>
+
+    <div class="result-container" id="result-container">
+        <!-- Result will be displayed here -->
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Which language runs in a web browser?",
+                a: "Java",
+                b: "C",
+                c: "Python",
+                d: "JavaScript",
+                correct: "d"
+            },
+            {
+                question: "What does CSS stand for?",
+                a: "Central Style Sheets",
+                b: "Cascading Style Sheets",
+                c: "Cascading Simple Sheets",
+                d: "Cars SUVs Sailboats",
+                correct: "b"
+            },
+            {
+                question: "What does HTML stand for?",
+                a: "Hypertext Markup Language",
+                b: "Hypertext Markdown Language",
+                c: "Hyperloop Machine Language",
+                d: "Helicopters Terminals Motorboats Lamborghinis",
+                correct: "a"
+            },
+            {
+                question: "What year was JavaScript launched?",
+                a: "1996",
+                b: "1995",
+                c: "1994",
+                d: "None of the above",
+                correct: "b"
+            },
+            {
+                question: "Which of these is a JavaScript framework?",
+                a: "React",
+                b: "Django",
+                c: "Laravel",
+                d: "Spring",
+                correct: "a"
+            },
+            {
+                question: "What is the correct HTML element for inserting a line break?",
+                a: "break",
+                b: "lb",
+                c: "br",
+                d: "newline",
+                correct: "c"
+            },
+            {
+                question: "What is the full form of SQL?",
+                a: "Structured Query Language",
+                b: "Structured Question Language",
+                c: "Simple Query Language",
+                d: "Standard Query Language",
+                correct: "a"
+            }
+        ];
+
+        let currentQuiz = 0;
+        let score = 0;
+
+        function loadQuiz() {
+            const currentQuizData = quizData[currentQuiz];
+            document.getElementById('question').textContent = currentQuizData.question;
+            document.getElementById('options').innerHTML = `
+                <li><input type="radio" name="answer" value="a">${currentQuizData.a}</li>
+                <li><input type="radio" name="answer" value="b">${currentQuizData.b}</li>
+                <li><input type="radio" name="answer" value="c">${currentQuizData.c}</li>
+                <li><input type="radio" name="answer" value="d">${currentQuizData.d}</li>
+            `;
+        }
+
+        function submitAnswer() {
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            if (!selectedAnswer) {
+                alert("Please select an answer!");
+                return;
+            }
+
+            if (selectedAnswer.value === quizData[currentQuiz].correct) {
+                score++;
+            }
+
+            currentQuiz++;
+
+            if (currentQuiz < quizData.length) {
+                loadQuiz();
+            } else {
+                document.querySelector('.quiz-container').style.display = 'none';
+                document.getElementById('result-container').innerHTML = `
+                    <h2>You scored ${score} out of ${quizData.length}</h2>
+                    <button onclick="location.reload()">Reload Quiz</button>
+                `;
+            }
+        }
+
+        loadQuiz();
+    </script>
+
+</body>
+</html>
